@@ -76,8 +76,8 @@ export default function Login() {
 
         <div className="text-[11px] text-neutral-400 border-t border-neutral-100 dark:border-neutral-800 pt-2 space-y-0.5">
           <p className="font-medium text-neutral-500 dark:text-neutral-400">Demo accounts</p>
-          <p>Buyer: buyer@demo.com or User1 / 1111</p>
-          <p>Seller: seller@demo.com or User2 / 2222</p>
+          <p>Buyer: User1 / 1111</p>
+          <p>Seller: User2 / 2222</p>
         </div>
       </form>
     </div>
