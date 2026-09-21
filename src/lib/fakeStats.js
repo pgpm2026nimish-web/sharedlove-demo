@@ -12,5 +12,11 @@ export function pseudoLikes(id) {
 
 export function sellerStats(name) {
   const h = hash(name, 89)
-  return { itemsSold: (h % 30) + 2, shipsInDays: (h % 3) + 1 }
+  const itemsSold = (h % 30) + 2
+  // Rating scales loosely with items sold (more sales, tighter/higher
+  // rating), same idea as real marketplace seller ratings, still
+  // deterministic per name rather than random on every render.
+  const rating = Math.min(5, 3.8 + (h % 13) / 10)
+  const ratingCount = Math.max(itemsSold - (h % 4), 1)
+  return { itemsSold, shipsInDays: (h % 3) + 1, rating: Math.round(rating * 10) / 10, ratingCount }
 }
