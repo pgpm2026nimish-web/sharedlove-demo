@@ -15,7 +15,7 @@ export const SEED_USERS = [
   {
     id: 'u-buyer',
     realName: 'Demo Buyer Account',
-    name: 'Demo Buyer',
+    name: 'User1',
     email: 'buyer@demo.com',
     password: '1111',
     role: 'buyer',
@@ -25,7 +25,7 @@ export const SEED_USERS = [
   {
     id: 'u-seller',
     realName: 'Demo Seller Account',
-    name: 'Demo Seller',
+    name: 'User2',
     email: 'seller@demo.com',
     password: '2222',
     role: 'seller',
