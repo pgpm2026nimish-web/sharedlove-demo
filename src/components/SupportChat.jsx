@@ -14,6 +14,7 @@ const SUGGESTED = FAQS.slice(0, 4)
 export default function SupportChat() {
   const { settings } = useApp()
   const [open, setOpen] = useState(false)
+  const [showPrompt, setShowPrompt] = useState(false)
   const [messages, setMessages] = useState([GREETING])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -23,6 +24,23 @@ export default function SupportChat() {
   useEffect(() => {
     if (open && listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight
   }, [messages, open, sending])
+
+  // A floating icon alone isn't obviously clickable to a first-time
+  // visitor, so a proactive speech bubble invites them in shortly after
+  // they land, then quietly disappears if they don't take the hint.
+  useEffect(() => {
+    const showTimer = setTimeout(() => setShowPrompt(true), 2500)
+    const hideTimer = setTimeout(() => setShowPrompt(false), 15000)
+    return () => {
+      clearTimeout(showTimer)
+      clearTimeout(hideTimer)
+    }
+  }, [])
+
+  function handleOpen() {
+    setOpen(true)
+    setShowPrompt(false)
+  }
 
   async function send(text) {
     const trimmed = text.trim()
@@ -130,13 +148,31 @@ export default function SupportChat() {
         </div>
       )}
 
+      {showPrompt && !open && (
+        <button
+          onClick={handleOpen}
+          className="mb-3 max-w-[210px] flex items-start gap-2 rounded-2xl rounded-bl-sm bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-lg p-3 text-left"
+        >
+          <p className="text-xs text-neutral-700 dark:text-neutral-300 flex-1">
+            Need a hand? I'm Sprout, ask me anything about SharedLove.
+          </p>
+          <span
+            onClick={(e) => { e.stopPropagation(); setShowPrompt(false) }}
+            className="text-neutral-300 hover:text-neutral-500 shrink-0"
+            title="Dismiss"
+          >
+            <X size={12} />
+          </span>
+        </button>
+      )}
+
       <button
-        onClick={() => setOpen((o) => !o)}
-        // A white ring so the button reads as a distinct floating control
-        // no matter what's behind it: the app's own emerald-50/emerald-600
-        // sections were letting a plain emerald circle blend straight into
-        // the page instead of standing out from it.
-        className="w-12 h-12 rounded-full bg-emerald-600 text-white shadow-lg ring-2 ring-white dark:ring-neutral-900 flex items-center justify-center hover:bg-emerald-700"
+        onClick={() => (open ? setOpen(false) : handleOpen())}
+        // A warm "seed" tone instead of the site's own emerald green, since
+        // an emerald circle kept blending into the app's own emerald-toned
+        // sections. Amber reads as a distinct, unmistakably clickable
+        // control against the rest of the (green/white/neutral) palette.
+        className="w-12 h-12 rounded-full bg-amber-500 text-white shadow-lg ring-2 ring-white dark:ring-neutral-900 flex items-center justify-center hover:bg-amber-600"
         title="Chat with Sprout"
       >
         {open ? <X size={20} /> : <Sprout size={20} />}
