@@ -22,10 +22,19 @@ function loadTheme() {
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
+// Settings live in each visitor's own browser (localStorage), not on a
+// server, so flipping the toggle in Admin only affects the admin's own
+// browser, not anyone else visiting the site. To make live local-LLM
+// grading the experience for every fresh visitor during a demo, the
+// default itself points at the presenter's laptop tunnel. This is safe to
+// leave in even after the demo: if the tunnel is offline or the URL has
+// gone stale, every call still falls back to Simulated automatically, per
+// the same fallback contract used everywhere else, so a fresh visitor
+// never sees a broken experience, just a slightly slower first response.
 const DEFAULT_SETTINGS = {
-  providerId: 'simulated',
+  providerId: 'ollama',
   apiKeys: { gemini: '', openai: '', claude: '', openrouter: '' },
-  ollamaEndpoint: 'http://localhost:11434',
+  ollamaEndpoint: 'https://hash-java-harpist.ngrok-free.dev',
   ollamaModel: 'llava',
   openrouterModel: 'meta-llama/llama-3.2-11b-vision-instruct:free',
 }
