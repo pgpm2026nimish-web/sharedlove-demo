@@ -132,7 +132,11 @@ export default function SupportChat() {
 
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-12 h-12 rounded-full bg-emerald-600 text-white shadow-lg flex items-center justify-center hover:bg-emerald-700"
+        // A white ring so the button reads as a distinct floating control
+        // no matter what's behind it: the app's own emerald-50/emerald-600
+        // sections were letting a plain emerald circle blend straight into
+        // the page instead of standing out from it.
+        className="w-12 h-12 rounded-full bg-emerald-600 text-white shadow-lg ring-2 ring-white dark:ring-neutral-900 flex items-center justify-center hover:bg-emerald-700"
         title="Chat with Sprout"
       >
         {open ? <X size={20} /> : <Sprout size={20} />}
