@@ -7,6 +7,12 @@ import SupportChat from './SupportChat.jsx'
 import ExitSurveyModal from './ExitSurveyModal.jsx'
 import ShareAppModal from './ShareAppModal.jsx'
 
+// A short alias for the deployed GitHub Pages URL, since that URL has the
+// GitHub username baked in (https://<username>.github.io/<repo>/) and
+// there's no way to shorten a github.io URL itself. Update this if the
+// live site's address ever changes.
+const PUBLIC_SHORT_URL = 'https://tinyurl.com/2afww279'
+
 // Public tabs only — Settings/grading-provider config is admin-only and
 // reached via the small "Admin" link in the header, not the main nav, so
 // booth visitors browsing/selling never see an invitation to change it.
@@ -140,7 +146,10 @@ export default function Layout() {
       {showExitSurvey && <ExitSurveyModal onSubmit={handleSurveySubmit} onSkip={finishLogout} />}
 
       {showShareApp && (
-        <ShareAppModal url={window.location.origin + window.location.pathname} onClose={() => setShowShareApp(false)} />
+        <ShareAppModal
+          url={window.location.hostname.endsWith('github.io') ? PUBLIC_SHORT_URL : window.location.origin + window.location.pathname}
+          onClose={() => setShowShareApp(false)}
+        />
       )}
 
       {/* Phone-style bottom tab nav — only shown below the md breakpoint.
