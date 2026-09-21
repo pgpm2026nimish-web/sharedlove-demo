@@ -4,15 +4,18 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // GitHub Pages serves a project site from https://<user>.github.io/<repo>/,
-// not the domain root, so the build needs every asset URL prefixed with
-// "/<repo>/". Dev mode stays at root so `npm run dev` still works normally.
-// If you name the GitHub repo something other than "sharedlove-demo",
-// update BASE_PATH to match, or Pages will 404 on every asset.
+// not the domain root, so that build needs every asset URL prefixed with
+// "/<repo>/". Netlify (and dev mode) serve from the domain root, so they
+// need base "/" instead, run `DEPLOY_TARGET=root npm run build` for those.
+// Deploying the wrong one is the classic "blank page" bug: assets 404
+// silently because they're looked for under the wrong path.
+// If you rename the GitHub repo, update BASE_PATH to match.
 const BASE_PATH = '/sharedlove-demo/'
+const useRootBase = process.env.DEPLOY_TARGET === 'root'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  base: command === 'build' ? BASE_PATH : '/',
+  base: command === 'build' && !useRootBase ? BASE_PATH : '/',
   server: {
     // --host alone isn't always enough on newer Vite: it still checks the
     // Host header against an allowlist and can silently refuse phones that

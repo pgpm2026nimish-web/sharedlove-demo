@@ -55,7 +55,11 @@ export default function SupportChat() {
   }
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-20">
+    // Bottom-left, not bottom-right: Netlify auto-injects its own badge
+    // widget in the bottom-right corner of every deployed page, which was
+    // sitting on top of Sprout's button there. Left side avoids the clash
+    // entirely without depending on Netlify's dashboard settings.
+    <div className="fixed bottom-20 md:bottom-6 left-4 md:left-6 z-20">
       {open && (
         <div className="mb-3 w-[calc(100vw-2rem)] max-w-sm h-[28rem] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 bg-emerald-600 text-white shrink-0">
