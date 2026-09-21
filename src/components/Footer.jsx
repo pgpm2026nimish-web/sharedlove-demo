@@ -47,7 +47,12 @@ export default function Footer() {
         <p className="flex items-center gap-1.5 text-xs text-neutral-400 dark:text-neutral-500">
           <Heart size={12} className="text-emerald-500" fill="currentColor" /> SharedLove, secondhand and verified
         </p>
-        <p className="text-[11px] text-neutral-300 dark:text-neutral-600">© 2026 SharedLove. Prototype for a Service Operations Management course project.</p>
+        <div className="flex items-center gap-3">
+          <Link to="/privacy" className="text-[11px] text-neutral-400 dark:text-neutral-500 hover:text-emerald-600 dark:hover:text-emerald-400 underline underline-offset-2">
+            Privacy Policy
+          </Link>
+          <p className="text-[11px] text-neutral-300 dark:text-neutral-600">© 2026 SharedLove. Prototype for a Service Operations Management course project.</p>
+        </div>
       </div>
     </footer>
   )

@@ -14,6 +14,7 @@ import AdminActivity from './pages/AdminActivity.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import HowItWorks from './pages/HowItWorks.jsx'
 import ContactUs from './pages/ContactUs.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Profile from './pages/Profile.jsx'
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
