@@ -1,18 +1,11 @@
 import { useState } from 'react'
-import { X, Copy, Check, Send, AlertCircle, MessageCircle, Mail } from 'lucide-react'
+import { X, Copy, Check, Send, AlertCircle } from 'lucide-react'
 
 const SHARE_TEXT = "I've been using SharedLove for secondhand clothes with AI condition grading and open-box delivery. Check it out:"
 
 export default function ShareAppModal({ url, onClose }) {
   const [copied, setCopied] = useState(false)
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`
-  const shareMessage = `${SHARE_TEXT} ${url}`
-  // Plain links, not the Web Share API, so these work over plain http on a
-  // LAN IP too — navigator.share only works on https/localhost, which is
-  // why "Share via..." below can disappear during a wifi demo but these
-  // two never do.
-  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`
-  const emailHref = `mailto:?subject=${encodeURIComponent('SharedLove')}&body=${encodeURIComponent(shareMessage)}`
   // A QR built from "localhost" is unopenable on any other device, that
   // hostname means "this device" to whoever scans it, not your laptop, so
   // warn instead of handing out a code that can never work.
@@ -73,23 +66,6 @@ export default function ShareAppModal({ url, onClose }) {
             {copied ? <Check size={14} /> : <Copy size={14} />}
             {copied ? 'Copied' : 'Copy'}
           </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 bg-[#25D366] text-white font-semibold rounded-lg py-2.5 text-sm"
-          >
-            <MessageCircle size={15} /> WhatsApp
-          </a>
-          <a
-            href={emailHref}
-            className="flex items-center justify-center gap-1.5 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-semibold rounded-lg py-2.5 text-sm"
-          >
-            <Mail size={15} /> Email
-          </a>
         </div>
 
         {navigator.share && (
