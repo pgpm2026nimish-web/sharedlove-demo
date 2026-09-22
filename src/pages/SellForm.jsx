@@ -95,20 +95,35 @@ export default function Sell() {
     setResult(null)
   }
 
+  // Grading always determines its own "like new" reference price from the
+  // photos/category, rather than trusting whatever number happens to be
+  // sitting in the base-price field. Otherwise a seller could get a wildly
+  // different final price just by typing a different number in, with the
+  // condition grade never actually changing, letting the field override
+  // the AI's own judgment defeats the point of AI-graded pricing. The
+  // field still updates afterward so what's shown always matches what was
+  // actually used, no stale/ghost number left behind.
   async function handleGrade() {
     if (photos.length === 0) return
     setGrading(true)
     try {
       const apiKey = settings.apiKeys?.[settings.providerId]
-      const graded = await runGrading({
+      const providerArgs = {
         providerId: settings.providerId,
         apiKey,
         endpoint: settings.ollamaEndpoint,
         model: settings.providerId === 'ollama' ? settings.ollamaModel : settings.openrouterModel,
+      }
+      const suggested = await runPriceSuggestion({ ...providerArgs, photos, category, gender, size })
+      setBasePrice(suggested.price)
+      setPriceSuggestionFellBack(suggested.fellBack ? suggested.fallbackReason : null)
+
+      const graded = await runGrading({
+        ...providerArgs,
         photos,
         questionnaire,
         provenance: { cleaningMethod, sellReason, tagPhoto, smokeFreeHome, petFreeHome },
-        basePrice: Number(basePrice) || 0,
+        basePrice: suggested.price,
       })
       setResult(graded)
     } finally {
@@ -301,7 +316,7 @@ export default function Sell() {
 
         <label className="block">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Base price (₹, before condition discount)</span>
+            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Base price (₹, AI-determined)</span>
             <button
               type="button"
               onClick={handleSuggestPrice}
@@ -326,7 +341,7 @@ export default function Sell() {
             <span className="text-[11px] text-neutral-400">
               {photos.length === 0
                 ? 'Add photos first to get an AI price suggestion, or set your own.'
-                : 'This is the "like new" reference price. Your final listing price is this, discounted by the condition grade below.'}
+                : 'This is the "like new" reference price. "Get AI condition grade" below re-determines it from your photos each time, so typing your own number here is just a preview, not the final say.'}
             </span>
           )}
         </label>
