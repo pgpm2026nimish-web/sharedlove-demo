@@ -199,6 +199,11 @@ export default function ListingDetail() {
               )}
             </div>
             <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Price reflects the AI condition grade above</p>
+            {listing.mrp > 0 && (
+              <p className="text-xs text-neutral-400 mt-0.5">
+                MRP <span className="line-through">₹{listing.mrp}</span>, what the seller originally paid for it new
+              </p>
+            )}
             <p className="text-xs text-neutral-400 mt-0.5">
               Shipping &amp; packing (₹{SHIPPING_PACKING_FEE}) added at checkout, not included above
             </p>
@@ -282,6 +287,14 @@ export default function ListingDetail() {
                 Brand tag verified:
                 {listing.provenance.tagPhoto ? (
                   <span className="text-emerald-600 dark:text-emerald-400 font-medium">Yes, photo provided</span>
+                ) : (
+                  <span className="text-neutral-400">Not provided</span>
+                )}
+              </p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                Purchase receipt:
+                {listing.provenance.receiptPhoto ? (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">Provided</span>
                 ) : (
                   <span className="text-neutral-400">Not provided</span>
                 )}

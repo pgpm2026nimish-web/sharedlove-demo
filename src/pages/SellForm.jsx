@@ -9,7 +9,7 @@ import { COLORS, LOCATIONS } from '../lib/attributes.js'
 import { PLATFORM_FEE_RATE, SHIPPING_PACKING_FEE, sellerPayout, platformFee } from '../lib/pricing.js'
 import { PAYOUT_TYPES, payoutMethodLabel } from '../lib/payments.js'
 import GradeBadge from '../components/GradeBadge.jsx'
-import { Upload, Loader2, AlertCircle, ChevronLeft, Tag, LogIn, Sparkles, Wallet, Pencil } from 'lucide-react'
+import { Upload, Loader2, AlertCircle, ChevronLeft, Tag, LogIn, Sparkles, Wallet, Pencil, Receipt } from 'lucide-react'
 
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -32,6 +32,7 @@ export default function Sell() {
   const [color, setColor] = useState(COLORS[0])
   const [location, setLocation] = useState(LOCATIONS[0])
   const [basePrice, setBasePrice] = useState(1000)
+  const [mrp, setMrp] = useState('')
   const [photos, setPhotos] = useState([])
   const [questionnaire, setQuestionnaire] = useState({
     stains: 'none',
@@ -44,6 +45,7 @@ export default function Sell() {
   const [cleaningMethod, setCleaningMethod] = useState(CLEANING_METHODS[0])
   const [sellReason, setSellReason] = useState(SELL_REASONS[0])
   const [tagPhoto, setTagPhoto] = useState(null)
+  const [receiptPhoto, setReceiptPhoto] = useState(null)
   const [smokeFreeHome, setSmokeFreeHome] = useState(true)
   const [petFreeHome, setPetFreeHome] = useState(true)
   const [grading, setGrading] = useState(false)
@@ -88,6 +90,11 @@ export default function Sell() {
       setTagPhoto(await fileToDataUrl(file))
       setResult(null)
     }
+  }
+
+  async function handleReceiptPhoto(e) {
+    const file = e.target.files?.[0]
+    if (file) setReceiptPhoto(await fileToDataUrl(file))
   }
 
   function updateQ(field, value) {
@@ -198,10 +205,11 @@ export default function Sell() {
       color,
       location,
       basePrice: Number(basePrice) || 0,
+      mrp: mrp ? Number(mrp) : null,
       seller: currentUser.name,
       photos,
       questionnaire,
-      provenance: { cleaningMethod, sellReason, tagPhoto, smokeFreeHome, petFreeHome },
+      provenance: { cleaningMethod, sellReason, tagPhoto, receiptPhoto, smokeFreeHome, petFreeHome },
       grade: result,
       status: 'listed',
       createdAt: Date.now(),
@@ -347,6 +355,20 @@ export default function Sell() {
         </label>
 
         <label className="block">
+          <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">MRP (₹, original retail price, optional)</span>
+          <input
+            type="number"
+            value={mrp}
+            onChange={(e) => setMrp(e.target.value)}
+            placeholder="What you originally paid for it new"
+            className="mt-1 w-full rounded-lg border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 px-3 py-2 text-sm"
+          />
+          <span className="text-[11px] text-neutral-400">
+            Shown to buyers as context only, doesn't affect the AI-determined price above.
+          </span>
+        </label>
+
+        <label className="block">
           <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Photos (1 required, up to 4 helps grading accuracy)</span>
           <div className="mt-1 flex flex-wrap gap-2">
             {photos.map((p, i) => (
@@ -411,6 +433,21 @@ export default function Sell() {
                 </label>
               )}
               <p className="text-[11px] text-neutral-400">Helps buyers verify authenticity on peer-to-peer listings.</p>
+            </div>
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Purchase invoice / receipt (optional)</span>
+            <div className="mt-1 flex items-center gap-2">
+              {receiptPhoto ? (
+                <img src={receiptPhoto} className="w-16 h-16 object-cover rounded-lg border border-neutral-200 dark:border-neutral-700" />
+              ) : (
+                <label className="w-16 h-16 rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-neutral-400 cursor-pointer">
+                  <Receipt size={16} />
+                  <input type="file" accept="image/*" capture="environment" onChange={handleReceiptPhoto} className="hidden" />
+                </label>
+              )}
+              <p className="text-[11px] text-neutral-400">If you kept it, adds extra buyer confidence. Not required to publish.</p>
             </div>
           </label>
 
